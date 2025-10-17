@@ -38,10 +38,23 @@ describe('csvParser util', () => {
 		expect(out[0]).to.deep.equal({ a: '1', b: '2' });
 	});
 
-	it('throws when a value is empty (current behavior)', () => {
-		// The implementation assigns to a const when a value is falsy which causes a runtime error.
-		// This test documents the current behavior: an empty field causes an exception.
-		const input = 'a,b\n1,'; // b is empty
-		expect(() => csvParser(input)).to.throw();
+	it('skips rows when a value is empty', () => {
+		const input = 'a,b\n1,'; // b is empty -> row should be skipped
+		const out = csvParser(input);
+		expect(out).to.be.an('array').that.is.empty;
+	});
+
+	it('skips rows when a number field contains a non-numeric value', () => {
+		const input = 'a,number\n1,not-a-number';
+		const out = csvParser(input);
+		expect(out).to.be.an('array').that.is.empty;
+	});
+
+	it('parses rows when number field is numeric', () => {
+		const input = 'file,number\nfile1,42';
+		const out = csvParser(input);
+
+		expect(out).to.be.an('array').with.lengthOf(1);
+		expect(out[0]).to.deep.equal({ file: 'file1', number: '42' });
 	});
 });

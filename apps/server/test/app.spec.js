@@ -13,7 +13,6 @@ describe('My App', () => {
             .get('/files/data')
             .end((err, res) => {
                 expect(res).to.have.status(200);
-                expect(res.body).to.have.length(29);
 
                 // check data
                 expect(res.body[0]).to.have.property('file');

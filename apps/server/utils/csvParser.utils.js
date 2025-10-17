@@ -10,7 +10,7 @@ export const csvParser = (str) => {
 
     for (let i = 1; i < lines.length; i++) {
         const values = lines[i].split(delimiter);
-        const rowObject = {};
+        let rowObject = {};
 
         // if we do not enough data for every header, skip
         if(headers.length !== values.length) {
@@ -20,9 +20,15 @@ export const csvParser = (str) => {
         // otherwise, map the object
         for (let j = 0; j < headers.length; j++) {
             // value is undefined?, skip
-            if(!values[j]){
-                rowObject = {};
-                continue;
+            if(!values[j] || values[j] === '') {
+                rowObject = undefined;
+                break;
+            }
+
+            // check number value is actually a number
+            if(headers[j] === 'number' && isNaN(Number(values[j]))) {
+                rowObject = undefined;
+                break;
             }
 
             rowObject[headers[j]] = values[j];
