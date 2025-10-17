@@ -69,8 +69,5 @@ Thumbs.db
 # TypeScript cache
 *.tsbuildinfo
 
-# jest
-/apps/client/jest.config.cjs
-
 # Misc
 *.tgz
